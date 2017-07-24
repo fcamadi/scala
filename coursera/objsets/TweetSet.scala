@@ -78,16 +78,16 @@ abstract class TweetSet {
    * Question: Should we implement this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-	def descendingByRetweet: TweetList = {
-	  def iter(tw: TweetSet, tsl: TweetList): TweetList = {
-	    if (tw.isEmpty) tsl
-	    else {
-        val mostpop = tw.mostRetweeted
-        new Cons(mostpop, iter(tw.remove(mostpop), tsl))
-	    }
-	  }
-    iter(this, Nil)
-	}
+   def descendingByRetweet: TweetList = {
+      def iter(tw: TweetSet, tsl: TweetList): TweetList = {
+         if (tw.isEmpty) tsl
+	 else {
+            val mostpop = tw.mostRetweeted
+            new Cons(mostpop, iter(tw.remove(mostpop), tsl))
+	 }
+       }
+       iter(this, Nil)
+  }
 	
 	
   /**
@@ -140,14 +140,14 @@ class Empty extends TweetSet {
   /****/
   
   //aux 
-	val isEmpty: Boolean= true
-	//
+  val isEmpty: Boolean= true 
+  //
 	
   def filterAcc(p: Tweet => Boolean, accu: TweetSet): TweetSet = accu
 
-	def union(that: TweetSet): TweetSet = that
+  def union(that: TweetSet): TweetSet = that
 
-	def mostRetweeted: Tweet = throw new NoSuchElementException 
+  def mostRetweeted: Tweet = throw new NoSuchElementException 
 	
 	
 }
@@ -184,33 +184,32 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 	}
   /****/
 	
-	//aux 
-	val isEmpty: Boolean= false
-	//
+  //aux 
+  val isEmpty: Boolean= false
+  //
 	 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-		if (p(elem)) left.filterAcc(p, right.filterAcc(p, acc.incl(elem)))
-		else left.filterAcc(p, right.filterAcc(p, acc))
-	}
+	if (p(elem)) left.filterAcc(p, right.filterAcc(p, acc.incl(elem)))
+	else left.filterAcc(p, right.filterAcc(p, acc))
+  }
 
-	def union(that: TweetSet): TweetSet = {
-		(left union (right union that)).incl(elem)
-	}
+  def union(that: TweetSet): TweetSet = {
+	(left union (right union that)).incl(elem)
+  }
 
 
-	def mostRetweeted: Tweet =  {
-	  def maxRetweets(tweet1: Tweet, tweet2: Tweet): Tweet = {
-      if (tweet1.retweets > tweet2.retweets) tweet1
-      else tweet2
-	  }
+  def mostRetweeted: Tweet =  {
+      def maxRetweets(tweet1: Tweet, tweet2: Tweet): Tweet = {
+      	if (tweet1.retweets > tweet2.retweets) tweet1
+      	else tweet2
+      }
 	  
-	  if (left.isEmpty && right.isEmpty) elem
+      if (left.isEmpty && right.isEmpty) elem
 	  else if (left.isEmpty) maxRetweets(elem, right.mostRetweeted)
-    else if (right.isEmpty) maxRetweets(left.mostRetweeted, elem)
-    else maxRetweets(maxRetweets(left.mostRetweeted, elem), right.mostRetweeted)
-	}
-	
-}
+          else if (right.isEmpty) maxRetweets(left.mostRetweeted, elem)
+          else maxRetweets(maxRetweets(left.mostRetweeted, elem), right.mostRetweeted)
+      }
+  }
 
 
 
