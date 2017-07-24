@@ -1,0 +1,4 @@
+
+Functional Programming Principles in Scala
+
+May-June 2016
